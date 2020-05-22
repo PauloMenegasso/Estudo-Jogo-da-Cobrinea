@@ -11,6 +11,13 @@ let food = {
     x: Math.floor(Math.random() * 15 + 1) * box,
     y: Math.floor(Math.random() * 15 + 1) * box
 }
+let score = 0;
+let highestscore = 0;
+const scoreDisplay = document.querySelector('#score');
+const highestscoreDisplay = document.querySelector('#highscore');
+const levelDisplay = document.querySelector('#level');
+const startBtn = document.querySelector('#gamestart');
+
 
 function criarBG() {//cria o background do jogo num quadrado 16*16
     context.fillStyle = "lightgreen";
@@ -41,6 +48,7 @@ function update (event){//faz o movimento da cobrinha e não permite que ela vol
 
 
 function IniciarJogo() {
+
     if(snake[0].x > 15 * box && direction == "right") snake[0].x = 0; // comandos para a cobrinha n sair da tela
     if(snake[0].x < 0 && direction == "left") snake[0].x = 16 * box;
     if(snake[0].y > 15 * box && direction == "down") snake[0].y = 0;
@@ -49,7 +57,18 @@ function IniciarJogo() {
     for(i = 1; i < snake.length; i++){
         if(snake[0].x == snake[i].x && snake[0].y == snake[i].y){
             clearInterval(jogo);
-            alert("Game Over")
+                if(score > highestscore){
+                    highestscore = score;
+                    highestscoreDisplay.innerHTML = highestscore
+                };
+            score = 0;    
+            alert("Game Over");
+            snake.splice(1);
+            snake[0] = {
+                x: 8 * box,
+                y: 8 * box
+            };
+ 
         }
     } //game over
 
@@ -68,9 +87,12 @@ function IniciarJogo() {
 
     if(snakeX != food.x || snakeY != food.y){
         snake.pop();
+
     } else {
         food.x= Math.floor(Math.random() * 15 + 1) * box;
         food.y= Math.floor(Math.random() * 15 + 1) * box;
+        score = score + 1;
+        scoreDisplay.innerHTML = score
     }
 
     let newHead = {
@@ -80,5 +102,6 @@ function IniciarJogo() {
 
     snake.unshift(newHead);
 }
+var jogo = setInterval(IniciarJogo, 200); // reinicia o BG e a cobrinha a cada 100 ms, para o jogo nao travar
 
-let jogo = setInterval(IniciarJogo, 200); // reinicia o BG e a cobrinha a cada 100 ms, para o jogo nao travar
+
